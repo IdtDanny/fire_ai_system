@@ -1,0 +1,12 @@
+# ─── Core Dependencies ────────────────────────────────────────────────────────
+ultralytics>=8.0.0          # YOLOv8 inference and training
+opencv-python>=4.8.0        # Camera stream, frame capture, display
+requests>=2.28.0            # Slack/HTTP webhook alerts
+
+# ─── Training / Dataset (optional, only needed to train your own model) ────────
+roboflow>=1.1.0             # Download datasets from Roboflow Universe
+
+# ─── Raspberry Pi Hardware (optional, only needed on RPi deployment) ───────────
+gpiozero                  # GPIO actuator control (pump, buzzer)
+Adafruit-DHT              # DHT11/DHT22 temperature sensor
+RPi.GPIO                  # Low-level GPIO (alternative to gpiozero)

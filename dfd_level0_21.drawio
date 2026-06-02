@@ -1,0 +1,107 @@
+<mxfile host="app.diagrams.net" modified="2026-05-15T00:00:00.000Z" agent="5.0" etag="dfd-level0-v2" version="22.1.0" type="device">
+  <diagram name="Context DFD Level 0" id="context-dfd">
+    <mxGraphModel dx="1300" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="Context-Level DFD (Level 0): AI-Based Fire Detection &amp; Suppression System for Data Centers" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="300" y="30" width="600" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- CENTRAL PROCESS -->
+        <mxCell id="system" value="AI Fire Detection &amp;&#xa;Suppression System" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="420" y="280" width="220" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- EXTERNAL ENTITY: Data Center Administrator (top left) -->
+        <mxCell id="admin" value="Data Center Administrator" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="140" width="190" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="adminRole" value="(Configures, monitors)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=10;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="60" y="190" width="190" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Flow: Admin to System (Configuration Data) -->
+        <mxCell id="flowAdminToSys" value="Configuration Data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeColor=#000000;" edge="1" parent="1" source="admin" target="system">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Flow: System to Admin (Performance Reports) -->
+        <mxCell id="flowSysToAdmin" value="Performance Reports" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeColor=#000000;" edge="1" parent="1" source="system" target="admin">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="310" />
+              <mxPoint x="340" y="165" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- EXTERNAL ENTITY: System Developer/Designer (bottom left) -->
+        <mxCell id="developer" value="System Developer / Designer" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="480" width="190" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="developerRole" value="(Updates AI model, maintenance)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=10;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="60" y="530" width="190" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Flow: Developer to System (System Updates) -->
+        <mxCell id="flowDevToSys" value="System Updates /&#xa;Model Revisions" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeColor=#000000;" edge="1" parent="1" source="developer" target="system">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="155" y="460" />
+              <mxPoint x="155" y="385" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <!-- Flow: System to Developer (feedback/requests) – bidirectional -->
+        <mxCell id="flowSysToDev" value="Update Requests /&#xa;Version Status" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeColor=#000000;" edge="1" parent="1" source="system" target="developer">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="380" y="460" />
+              <mxPoint x="380" y="505" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- EXTERNAL ENTITY: Security Team (right, top) -->
+        <mxCell id="security" value="Security Team /&#xa;Safety Department" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="800" y="140" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="securityRole" value="(Receives alerts, internal response)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=10;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="800" y="190" width="200" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Flow: System to Security (System Alerts) -->
+        <mxCell id="flowSysToSecurity" value="System Alerts /&#xa;Incident Notifications" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeColor=#000000;" edge="1" parent="1" source="system" target="security">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- EXTERNAL ENTITY: Hazard/Fire Department (right, bottom) -->
+        <mxCell id="fireDept" value="Hazard / Fire /&#xa;Emergency Department" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="800" y="480" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="fireDeptRole" value="(External emergency intervention)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=10;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="800" y="530" width="200" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Flow: System to Fire Dept (Emergency Alerts) -->
+        <mxCell id="flowSysToFire" value="Emergency Alerts&#xa;(critical fire alerts)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeColor=#000000;" edge="1" parent="1" source="system" target="fireDept">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Simple legend -->
+        <mxCell id="legendBox" value="External Entity" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="620" width="120" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="legendProc" value="System Process" style="shape=rounded;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="220" y="620" width="120" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="legendFlow" value="Data Flow (arrow)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=10;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="380" y="622" width="120" height="20" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
