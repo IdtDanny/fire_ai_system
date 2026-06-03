@@ -52,9 +52,10 @@ import requests
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from utils.gsm_alerter import GSMAlerter
 
 class Alerter:
-    def __init__(self, slack_webhook_url=None, telegram_token=None, telegram_chat_id=None, smtp_config=None):
+    def __init__(self, slack_webhook_url=None, telegram_token=None, telegram_chat_id=None, smtp_config=None, gsm_phone_number=None, gsm_port="/dev/ttyS0"):
         """
         slack_webhook_url: Slack incoming webhook URL (optional)
         telegram_token: Bot token from @BotFather (optional)
@@ -65,6 +66,11 @@ class Alerter:
         self.telegram_token = telegram_token
         self.telegram_chat_id = telegram_chat_id
         self.smtp_config = smtp_config
+
+        self.gsm_phone_number = gsm_phone_number
+        self.gsm = None
+        if self.gsm_phone_number:
+            self.gsm = GSMAlerter(port=gsm_port)
 
     def send_log_alert(self, message):
         """Standard log alert (always sent)"""
@@ -115,6 +121,11 @@ class Alerter:
         except Exception as e:
             logging.error(f"Failed to send email alert: {e}")
 
+    def send_gsm_alert(self, message):
+        """Send an SMS alert using the GSM module."""
+        if self.gsm and self.gsm_phone_number:
+            self.gsm.send_sms(self.gsm_phone_number, message)
+
     def trigger_all(self, level, details=""):
         """
         Trigger all configured alerts.
@@ -125,6 +136,7 @@ class Alerter:
             self.send_log_alert(msg)
             self.send_slack_alert(msg)
             self.send_telegram_alert(msg)
+            self.send_gsm_alert(msg)  # Send via GSM
             # Email only for critical alerts? You can change this.
             # self.send_email_alert("Fire Alert (Warning)", msg)
 
@@ -134,6 +146,7 @@ class Alerter:
             self.send_slack_alert(msg)
             self.send_telegram_alert(msg)
             self.send_email_alert("🚨 CRITICAL FIRE ALERT 🚨", msg)
+            self.send_gsm_alert(msg)  # Send via GSM
 
         else:
             logging.warning(f"Unknown alert level: {level}")

@@ -39,5 +39,17 @@ CONFIG = {
         "password": "Mere1Liebe",        # Use Gmail App Password, not your regular password
         "from_addr": "maglobalrw@gmail.com",
         "to_addr": "idtbusy@gmail.com"
-    }  # or None to disable email
+    },  # or None to disable email
+
+    # GSM Module (optional)
+    "GSM_PHONE_NUMBER": "+250788984609",   # Recipient phone number
+    "GSM_PORT": "/dev/ttyS0",            # Serial port
+
+    # --- MQTT Broker Settings ---
+    "MQTT_BROKER": "localhost",        # Pi is the broker
+    "MQTT_PORT": 1883,
+    "MQTT_USER": "fireuser",
+    "MQTT_PASSWORD": "your_chosen_password",
+    "MQTT_FIRE_TOPIC": "fire_detection/status",
+    "MQTT_SENSOR_TOPIC": "fire_detection/sensors",
 }
