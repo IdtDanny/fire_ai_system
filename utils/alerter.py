@@ -52,7 +52,7 @@ import requests
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from utils.gsm_alerter import GSMAlerter
+# from utils.gsm_alerter import GSMAlerter
 
 class Alerter:
     def __init__(self, slack_webhook_url=None, telegram_token=None, telegram_chat_id=None, smtp_config=None, gsm_phone_number=None, gsm_port="/dev/ttyS0"):
@@ -69,8 +69,8 @@ class Alerter:
 
         self.gsm_phone_number = gsm_phone_number
         self.gsm = None
-        if self.gsm_phone_number:
-            self.gsm = GSMAlerter(port=gsm_port)
+        # if self.gsm_phone_number:
+            # self.gsm = GSMAlerter(port=gsm_port)
 
     def send_log_alert(self, message):
         """Standard log alert (always sent)"""

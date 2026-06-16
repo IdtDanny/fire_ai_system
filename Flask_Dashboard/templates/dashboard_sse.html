@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fire Suppression System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #f1f5f9;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .status-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .fire-status {
+            font-size: 2rem;
+            font-weight: bold;
+            padding: 1rem;
+            border-radius: 2rem;
+            transition: 0.2s;
+        }
+        .safe {
+            background: #10b981;
+            color: white;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+        .danger {
+            background: #ef4444;
+            color: white;
+            animation: pulse 1s infinite;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+        }
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.02); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .card h3 {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        .card .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #f1f5f9;
+        }
+        .alerts-list {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+        }
+        .alerts-list h3 {
+            color: #f1f5f9;
+            margin-bottom: 1rem;
+        }
+        .alert-item {
+            background: rgba(0,0,0,0.3);
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.8rem;
+            color: #cbd5e1;
+            font-family: monospace;
+            border-left: 4px solid #ef4444;
+        }
+        .badge {
+            display: inline-block;
+            background: #334155;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            margin-top: 1rem;
+        }
+        footer {
+            text-align: center;
+            color: #64748b;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🔥 AI Fire Suppression System</h1>
+
+    <div class="status-card">
+        <div id="fireStatus" class="fire-status safe">✅ SYSTEM SAFE</div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>🌡️ Temperature</h3>
+            <div class="value" id="tempValue">-- °C</div>
+        </div>
+        <div class="card">
+            <h3>💨 Gas Level</h3>
+            <div class="value" id="gasValue">--</div>
+        </div>
+        <div class="card">
+            <h3>📷 Camera</h3>
+            <div class="value" id="cameraStatus">Active</div>
+        </div>
+        <div class="card">
+            <h3>🧠 AI Model</h3>
+            <div class="value" id="modelName">yolov8n.pt</div>
+            <div class="badge" id="confidence">Threshold: 0.5</div>
+        </div>
+    </div>
+
+    <div class="alerts-list">
+        <h3>🚨 Recent Alerts</h3>
+        <div id="alertsContainer">
+            <div class="alert-item">Waiting for events...</div>
+        </div>
+    </div>
+    <footer>Live updates via MQTT | System status refreshed in real‑time</footer>
+</div>
+
+<script>
+    // EventSource for SSE
+    const evtSource = new EventSource('/stream');
+    evtSource.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        // Update UI
+        const fireDiv = document.getElementById('fireStatus');
+        if (data.fire) {
+            fireDiv.className = 'fire-status danger';
+            fireDiv.innerHTML = '🚨 FIRE DETECTED! 🚨';
+        } else {
+            fireDiv.className = 'fire-status safe';
+            fireDiv.innerHTML = '✅ SYSTEM SAFE ✅';
+        }
+        document.getElementById('tempValue').innerHTML = data.temperature + ' °C';
+        document.getElementById('gasValue').innerHTML = data.gas;
+    };
+
+    // Poll alerts and status every 2 seconds
+    function fetchAlerts() {
+        fetch('/alerts')
+            .then(res => res.json())
+            .then(alerts => {
+                const container = document.getElementById('alertsContainer');
+                if (alerts.length === 0) {
+                    container.innerHTML = '<div class="alert-item">No alerts</div>';
+                } else {
+                    container.innerHTML = alerts.map(alert => `<div class="alert-item">${alert}</div>`).join('');
+                }
+            });
+        fetch('/status')
+            .then(res => res.json())
+            .then(status => {
+                document.getElementById('cameraStatus').innerHTML = status.camera_active ? '✅ Active' : '❌ Inactive';
+                document.getElementById('modelName').innerHTML = status.model;
+                document.getElementById('confidence').innerHTML = `Threshold: ${status.confidence}`;
+            });
+    }
+    fetchAlerts();
+    setInterval(fetchAlerts, 2000);
+</script>
+</body>
+</html>

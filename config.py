@@ -2,7 +2,7 @@
 
 CONFIG = {
     # Camera settings
-    "CAMERA_INDEX": 0,
+    "CAMERA_INDEX": 1,
     "FRAME_WIDTH": 640,
     "FRAME_HEIGHT": 480,
 
@@ -22,7 +22,13 @@ CONFIG = {
     "TEMP_PIN": 4,
     "GAS_PIN": 17,
     "PUMP_PIN": 18,
+    "PUMP_BACK": 24,
     "BUZZER_PIN": 23,
+
+    # RGB LED Pins
+    "RGB_RED_PIN": 13,
+    "RGB_GREEN_PIN": 26,
+    "RGB_BLUE_PIN": 19,
 
     # Alert Webhook (Optional)
     "SLACK_WEBHOOK": None,  # e.g., "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
@@ -49,7 +55,7 @@ CONFIG = {
     "MQTT_BROKER": "localhost",        # Pi is the broker
     "MQTT_PORT": 1883,
     "MQTT_USER": "fireuser",
-    "MQTT_PASSWORD": "your_chosen_password",
+    "MQTT_PASSWORD": "admin",
     "MQTT_FIRE_TOPIC": "fire_detection/status",
     "MQTT_SENSOR_TOPIC": "fire_detection/sensors",
 }

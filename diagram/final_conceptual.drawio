@@ -1,0 +1,145 @@
+<mxfile host="app.diagrams.net" agent="5.0">
+  <diagram name="Conceptual Framework (YOLOv8 + Gunicorn)" id="framework-yolo">
+    <mxGraphModel dx="1664" dy="1055" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" value="Figure 1.1: Conceptual Framework – AI Fire Detection &amp; Suppression System (YOLOv8 + Gunicorn)" vertex="1">
+          <mxGeometry height="30" width="800" x="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="inputLayer" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;startSize=25;" value="INPUT LAYER" vertex="1">
+          <mxGeometry height="220" width="220" x="40" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="dht11" parent="inputLayer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="DHT11 (Temperature Sensor)" vertex="1">
+          <mxGeometry height="40" width="180" x="20" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="mq135" parent="inputLayer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="MQ-135 (Gas Sensor)" vertex="1">
+          <mxGeometry height="40" width="180" x="20" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="camera" parent="inputLayer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Camera Module" vertex="1">
+          <mxGeometry height="40" width="180" x="20" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="procLayer" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;startSize=25;" value="PROCESSING LAYER" vertex="1">
+          <mxGeometry height="220" width="240" x="330" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="rpi" parent="procLayer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Raspberry Pi 3 B+&#xa;(Data acquisition &amp; preprocessing)" vertex="1">
+          <mxGeometry height="120" width="200" x="20" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="intelLayer" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;startSize=25;" value="INTELLIGENCE LAYER" vertex="1">
+          <mxGeometry height="300" width="280" x="640" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="yolo" parent="intelLayer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" value="YOLOv8 (Ultralytics)&#xa;Fire Detection Model" vertex="1">
+          <mxGeometry height="50" width="240" x="20" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="imgProc" parent="intelLayer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Image Processing (OpenCV)" vertex="1">
+          <mxGeometry height="40" width="240" x="20" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="sensorFusion" parent="intelLayer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Sensor Data Analysis&#xa;(Temp + Gas fusion)" vertex="1">
+          <mxGeometry height="45" width="240" x="20" y="165" as="geometry" />
+        </mxCell>
+        <mxCell id="decision" parent="intelLayer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" value="Decision: Fire / No Fire&#xa;(confidence ≥ 0.7)" vertex="1">
+          <mxGeometry height="55" width="240" x="20" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="outLayer" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;startSize=25;" value="OUTPUT LAYER" vertex="1">
+          <mxGeometry height="220" width="200" x="990" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="alert" parent="outLayer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Alert System&#xa;(notifications)" vertex="1">
+          <mxGeometry height="45" width="170" x="15" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="gunicorn" parent="outLayer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=2" value="+ Gunicorn Web Server&lt;br&gt;+ FastAPI Dashboard" vertex="1">
+          <mxGeometry height="75" width="170" x="15" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="userLayer" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;startSize=25;" value="USER LAYER (Human Users)" vertex="1">
+          <mxGeometry height="140" width="290" x="957" y="534" as="geometry" />
+        </mxCell>
+        <mxCell id="admin" parent="userLayer" style="shape=actor;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="Data Center&#xa;Administrator" vertex="1">
+          <mxGeometry height="70" width="60" x="20" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="security" parent="userLayer" style="shape=actor;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="Security Personnel /&#xa;Safety Officer" vertex="1">
+          <mxGeometry height="70" width="60" x="113" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="emergency" parent="userLayer" style="shape=actor;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="Emergency&#xa;Services" vertex="1">
+          <mxGeometry height="70" width="60" x="204" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="actuator" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;startSize=25;" value="ACTUATOR" vertex="1">
+          <mxGeometry height="140" width="260" x="650" y="534" as="geometry" />
+        </mxCell>
+        <mxCell id="co2" parent="actuator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="CO₂ Fire Suppression System&#xa;(activated via relay)" vertex="1">
+          <mxGeometry height="55" width="220" x="20" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="remote" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=center;" value="Remote Monitoring (Wi-Fi)&lt;br&gt;Access dashboard via&amp;nbsp;&lt;div&gt;http://fire-bot:5000&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="200" x="990" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow1" edge="1" parent="1" source="inputLayer" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="295" y="210" />
+              <mxPoint x="295" y="270" />
+            </Array>
+            <mxPoint x="330" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow1label" connectable="0" parent="arrow1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Sensed data,&lt;div&gt;Images&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.2" y="1" as="geometry">
+            <mxPoint x="-1" y="13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow2" edge="1" parent="1" source="procLayer" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeWidth=2;" target="intelLayer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow2label" connectable="0" parent="arrow2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Preprocessed&lt;div&gt;&amp;nbsp;data&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.2" y="1" as="geometry">
+            <mxPoint x="-2" y="9" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow3" edge="1" parent="1" source="intelLayer" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeWidth=2;" target="outLayer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow3label" connectable="0" parent="arrow3" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Fire&amp;nbsp;&lt;div&gt;confirmed&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.2" y="1" as="geometry">
+            <mxPoint x="-2" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow4" edge="1" parent="1" source="outLayer" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeWidth=2;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="userLayer">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1305" y="270" />
+              <mxPoint x="1305" y="604" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow4label" connectable="0" parent="arrow4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Alerts&amp;nbsp;&lt;div&gt;&amp;nbsp;(Notifications)&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.2" y="1" as="geometry">
+            <mxPoint x="-1" y="81" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow5" edge="1" parent="1" source="decision" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeWidth=2;dashed=1;strokeColor=#b85450;" target="actuator">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="780" y="450" />
+              <mxPoint x="780" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow5label" connectable="0" parent="arrow5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fillColor=#ffffff;fontColor=#b85450;fontStyle=1" value="Fire suppression signal" vertex="1">
+          <mxGeometry relative="1" x="-0.2" y="1" as="geometry">
+            <mxPoint x="-2" y="13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow6" edge="1" parent="1" source="outLayer" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeWidth=1.5;strokeColor=#0066CC;" target="remote">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1090" y="480" />
+              <mxPoint x="1090" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow6label" connectable="0" parent="arrow6" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fillColor=#ffffff;" value="Real-time status,&amp;nbsp;&lt;div&gt;temperature and gas&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.2" y="1" as="geometry">
+            <mxPoint x="10" y="6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

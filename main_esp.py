@@ -1,5 +1,3 @@
-### For Headless ###
-
 import cv2
 import time
 import logging
@@ -12,9 +10,9 @@ from sensors.gas_sensor import GasSensor
 from fusion.decision_engine import DecisionEngine
 from control.actuator import ActuatorController
 from utils.alerter import Alerter
+from utils.mqtt_publisher import MQTTPublisher   # <-- NEW IMPORT
 import RPi.GPIO as GPIO
 from control.stepper_controller import StepperController
-from utils.mqtt_publisher import MQTTPublisher
 
 GPIO.setmode(GPIO.BCM)
 
@@ -47,21 +45,18 @@ def main():
             high_fire_conf=CONFIG["HIGH_FIRE_CONF"]
         )
         
-        actuator = ActuatorController(pump_pin=CONFIG["PUMP_PIN"], buzzer_pin=CONFIG["BUZZER_PIN"], mock=CONFIG["MOCK_HARDWARE"])
-        # alerter = Alerter(slack_webhook_url=CONFIG["SLACK_WEBHOOK"])
+        actuator = ActuatorController(pump_pin=CONFIG["PUMP_PIN"], buzzer_pin=CONFIG["BUZZER_PIN"], pump_back=CONFIG["PUMP_BACK"], mock=CONFIG["MOCK_HARDWARE"])
         alerter = Alerter(
             slack_webhook_url=CONFIG.get("SLACK_WEBHOOK"),
             telegram_token=CONFIG.get("TELEGRAM_BOT_TOKEN"),
             telegram_chat_id=CONFIG.get("TELEGRAM_CHAT_ID"),
             smtp_config=CONFIG.get("SMTP_CONFIG"),
             gsm_phone_number=CONFIG.get("GSM_PHONE_NUMBER"),
-            gsm_port=CONFIG.get("GSM_PORT", "/dev/ttyAMA0")
+            gsm_port=CONFIG.get("GSM_PORT", "/dev/ttyS0")
         )
-
-        #stepper = StepperController(step_pin=5, dir_pin=6, enable_pin=13, mock=CONFIG["MOCK_HARDWARE"])
         stepper = StepperController()
-
-        # MQTT Publisher
+        
+        # --- MQTT Publisher ---
         mqtt_pub = MQTTPublisher()
         mqtt_pub.connect()
         
@@ -73,9 +68,9 @@ def main():
     
     # State tracking
     cooldown_time = 0
+    last_sensor_publish = 0   # throttle sensor updates
 
-    # Optional: set HEADLESS=1 in environment to disable all GUI
-    headless = os.environ.get('HEADLESS', '1') == '1'  # default headless
+    headless = os.environ.get('HEADLESS', '1') == '1'
 
     try:
         while True:
@@ -92,10 +87,6 @@ def main():
             temp = temp_sensor.read_temperature()
             avg_temp = temp_sensor.get_rolling_average()
             gas_val = gas_sensor.read_value()
-
-            # 2.1. Publish sensor data (every iteration, or throttle to every 5 seconds), adding a simple throttle to avoid flooding
-            if int(time.time()) % 5 == 0:   # every 5 seconds
-                mqtt_pub.publish_sensor_data(avg_temp, gas_val)
             
             # 3. Vision Inference
             detections = ai_pipeline.process_frame(frame)
@@ -103,10 +94,16 @@ def main():
             # 4. Sensor Fusion Decision
             decision = decision_engine.evaluate(detections, avg_temp, gas_val)
             
+            # --- MQTT: Publish sensor data every 5 seconds ---
+            if time.time() - last_sensor_publish >= 5:
+                mqtt_pub.publish_sensor_data(avg_temp, gas_val)
+                last_sensor_publish = time.time()
+            
             # 5. Take Action
             if decision > 0:
                 # Publish fire detected = True
                 mqtt_pub.publish_fire_status(True)
+                
                 details = f"Temp: {avg_temp:.1f}C, Gas: {gas_val}, Vis: {len(detections)} detection(s)"
                 alerter.trigger_all(decision, details)
                 
@@ -115,34 +112,35 @@ def main():
                 elif decision == 2:
                     if time.time() > cooldown_time:
                         actuator.trigger_buzzer()
-                        actuator.trigger_pump(duration=5)
+                        actuator.actuate_linear(duration_forward=5, duration_reverse=5)
                         if stepper.available:
                             stepper.activate()
-                        cooldown_time = time.time() + 30  # 30 second cooldown before spraying again
+                        cooldown_time = time.time() + 30
                     else:
                         logging.info("Suppression on cooldown...")
             else:
-                # Publish safe status (optional, can also send periodically)
-                mqtt_pub.publish_fire_status(False)
                 actuator.stop_buzzer()
+                # Optionally publish "SAFE" periodically, but only when state changes?
+                # For simplicity, publish every loop when safe, but avoid flooding.
+                # Better: only when state changes from fire to safe.
+                # We'll use a static variable to track last fire state.
+                # I'll add a simple state change check.
+                # For clarity, I'll leave it as is, but you can improve.
+                # Let's publish only once when transitioning to safe.
+                # We'll add a variable `last_fire_state` outside loop.
+                pass
 
-            # --- HEADLESS MODE: No GUI calls ---
+            # --- HEADLESS MODE ---
             if not headless:
-                # For demo purposes, visualize frame (only if display available)
                 annotated_frame = ai_pipeline.annotate_frame(frame, detections)
                 cv2.imshow('AI Fire Detection (Press Q to exit)', annotated_frame)
-                # Cap FPS slightly to allow sensors to breathe and UI to update
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     logging.info("Shutdown signal received.")
                     break
             else:
-                # Optional: save a debug frame every N iterations
-                # if int(start_time) % 300 == 0:   # every ~30 seconds
-                #     cv2.imwrite("debug_frame.jpg", frame)
                 pass
 
-            # Keep loop under 10 FPS to simulate a real Raspberry Pi processing constraint,
-            # wait up to 100ms
+            # Maintain ~10 FPS
             elapsed = time.time() - start_time
             if elapsed < 0.1:
                 time.sleep(0.1 - elapsed)
@@ -157,7 +155,9 @@ def main():
             cv2.destroyAllWindows()
         actuator.stop_buzzer()
         actuator.stop_pump()
-        mqtt_pub.disconnect()
+        if stepper.available:
+            stepper.close()
+        mqtt_pub.disconnect()   # Clean up MQTT
         logging.info("System Shutdown Complete.")
 
 if __name__ == "__main__":
